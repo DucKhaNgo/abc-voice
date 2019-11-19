@@ -34,13 +34,16 @@ router.post("/", async (req, res, next) => {
   const user = req.user;
   const body = req.body;
   if (req.body && req.body.email && req.body.password) {
+    //user[0].token = "";
+      //userModel.update(user[0]);
+    console.log("1");
     const password = bcrypt.hashSync(req.body.password, 10);
     await userModel.changePassword(req.body.email, password).catch(e => {
       console.log(e);
     });
     res.redirect("./login");
   } else {
-    
+    console.log("2");
     userModel
       .findByEmail(user.email)
       .then(rows => {

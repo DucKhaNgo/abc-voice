@@ -52,9 +52,9 @@ module.exports = {
     entity.transactionId = null;
     return entity;
   },
-  getKeyByTransactionId: transactionId => {
+  getKeyByTransactionId: (idUser,transactionId) => {
     return db.load(
-      `select * from api_key where transactionId='${transactionId}'`
+      `select * from api_key where transactionId='${transactionId}' and user_id ='${idUser}'`
     );
   },
   getAllKeyByYear: (year, month) => {
