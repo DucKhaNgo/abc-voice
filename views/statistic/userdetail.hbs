@@ -33,7 +33,7 @@
             <div class="col-lg-12">
                 <div class="breadcrumb_iner text-center">
                     <div class="breadcrumb_iner_item">
-                        <h2 class="api-title">USER MANAGEMENT</h2>
+                        <h2 class="api-title" style="font-size: 50px">USER DETAIL</h2>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                                 {{!-- đổ data ở đây --}}
                                 <div class="table-row">
 
-                                    <div class="serial">{{@index}}</div>
+                                    <div class="serial">{{this.index}}</div>
                                     <div class="percentage"><input form="changekey{{id}}" type="hidden" name="id"
                                             value={{value}}>{{value}}</div>
                                     <input form="renewkey{{id}}" type="hidden" name="idPackage" value={{id_package}}>
@@ -99,19 +99,22 @@
                                         <form id='validkey{{id}}' method="POST" action='/admin/userdetail/validkey'
                                             style="width:100%">
                                             <button style="justify-content: center"
-                                                class="genric-btn primary-border circle" type="submit">{{status}}</button>
+                                                class="genric-btn primary-border circle"
+                                                type="submit">{{status}}</button>
                                         </form>
-
                                     </div>
                                 </div>
                                 {{/each}}
                             </div>
-                            {{#each pages}}
-                            <a class="getRevenueByYearBtn genric-btn success-border"
-                                href="page={{this.id}}">{{this.id}}</a>
-                            {{/each}}
+
                         </div>
+                        {{#each pages}}
+
+                        <a class="getRevenueByYearBtn genric-btn success-border  {{#if this.currentPage}}currentPage{{/if}} "
+                            {{#if this.currentPage}}{{else}}href="?page={{this.id}}" {{/if}}>{{this.id}}</a>
+                        {{/each}}
                     </div>
+
                 </div>
             </div>
         </div>
