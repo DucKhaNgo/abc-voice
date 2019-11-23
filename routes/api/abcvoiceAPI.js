@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 var keyModel = require("../../model/key.model");
-var passport = require("passport");
 
 var request = require("request");
 // packages upload file
@@ -13,7 +12,7 @@ var storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
   console.log(file);
   // if (file.mimetype === "audio/wav") {
-    cb(null, true);
+  cb(null, true);
   // } else {
   //   cb(new Error("Chỉ chấp nhận file .wav"), false);
   // }
@@ -25,12 +24,15 @@ var upload = multer({
 
 router.post("/", upload.single("myFile"), async (req, res, next) => {
   let wdRes = res;
-  let wdReq = req;
   const url = "https://server-sound-api.herokuapp.com";
   let jsonData = "";
   const file = req.file;
-  console.log('file in request---', file);
-  if (file.mimetype !== "audio/wav" && file.mimetype !== "audio/wave" && file.mimetype !== "audio/x-wav") {
+  console.log("file in request---", file);
+  if (
+    file.mimetype !== "audio/wav" &&
+    file.mimetype !== "audio/wave" &&
+    file.mimetype !== "audio/x-wav"
+  ) {
     const error = new Error("Chỉ chấp nhận file .wav");
     error.httpStatusCode = 400;
     return next(error);
@@ -66,7 +68,7 @@ router.post("/", upload.single("myFile"), async (req, res, next) => {
     }
   });
 });
-router.post("/a", async (req, res, next) => {
+router.post("/a", async (req, res) => {
   const id = req.body.key;
   const getKey = await keyModel.singleById(id);
   if (getKey.length > 0) {

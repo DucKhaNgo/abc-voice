@@ -1,10 +1,8 @@
 var express = require("express");
 var router = express.Router();
-var userModel = require("../../model/user.model");
 var passport = require("passport");
-let isInValid = false;
 /* GET login page. */
-router.get("/", function(req, res, next) {
+router.get("/", function(req, res) {
   res.render("login/login", { title: "Login" });
 });
 router.post("/", (req, res, next) => {

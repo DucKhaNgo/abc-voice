@@ -24,7 +24,7 @@ router.get("/", async (req, res, next) => {
     listKey: listKey[1]
   });
 });
-router.post("/updatekey", async (req, res, next) => {
+router.post("/updatekey", async (req, res) => {
   console.log("idddddd", req.body.id);
   let key = await apiKeyModel.searchKey(req.body.id);
   console.log("key-------", key);
@@ -33,7 +33,7 @@ router.post("/updatekey", async (req, res, next) => {
   await apiKeyModel.update(key[0]);
   res.redirect("/profile");
 });
-router.post("/renewkey", async (req, res, next) => {
+router.post("/renewkey", async (req, res) => {
   console.log("reqbody--", req.body);
   let key = await apiKeyModel.singleById(req.body.idKey);
   let packageInfo = await packageModel.singleById(req.body.idPackage);
@@ -44,9 +44,8 @@ router.post("/renewkey", async (req, res, next) => {
     .format("YYYY-MM-DD");
   await apiKeyModel.update(key[0]);
   res.redirect("/profile");
-
 });
-router.post("/", async (req, res, next) => {
+router.post("/", async (req, res) => {
   const user = req.user;
   const name = req.body.name;
   if (name) {

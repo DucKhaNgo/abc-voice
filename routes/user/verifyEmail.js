@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var userModel = require("../../model/user.model");
-router.get("/", async (req, res, next) => {
+router.get("/", async (req, res) => {
   var message = "Lỗi xác thực";
   const user = await userModel.verifyEmail(req.query.id);
   if (user) {

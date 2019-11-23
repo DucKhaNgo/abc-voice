@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 const account = require("../../const/emailAccount");
 let message = false;
 /* GET emailForgot page. */
-router.get("/", function(req, res, next) {
+router.get("/", function(req, res) {
   res.render("passwordforgot/passwordForgot", {
     title: "Email Forgot",
     message: message
@@ -15,7 +15,7 @@ router.get("/", function(req, res, next) {
 });
 
 /* GET email requst notification page. */
-router.get("/nortificationRequest", function(req, res, next) {
+router.get("/nortificationRequest", function(req, res) {
   res.render("passwordforgot/notificationRequest", {
     title: "Email Request Notification",
     layout: "../views/layout"
@@ -23,7 +23,7 @@ router.get("/nortificationRequest", function(req, res, next) {
 });
 
 /* GET input new password page. */
-router.get("/newPassword", function(req, res, next) {
+router.get("/newPassword", function(req, res) {
   res.render("passwordforgot/newPassword", {
     title: "New Password",
     layout: "../views/layout",
@@ -65,7 +65,6 @@ const sendmailRecover = async (req, res, email) => {
 router.post("/", async (req, res, next) => {
   const email = req.body.email;
   let token = "";
-  let notify = "CHÚNG TÔI RẤT TIẾC !!!";
   message =
     "Có vẻ như tài khoản của bạn không tồn tại, hoặc chưa được kíck hoạt với bất cứ email nào :( !!!";
   let user = null;
@@ -77,7 +76,6 @@ router.post("/", async (req, res, next) => {
   console.log("user------", user);
   console.log("email----", email);
   if (user.length > 0) {
-    notify = "HÃY CHECK EMAIL CỦA BẠN !!!";
     message =
       "Chúng tôi đã gửi thư đến email của bạn, hãy làm theo hướng dẫn trong thư để lấy lại mật khẩu nhé ^^!";
     token = await sendmailRecover(req, res, email);
@@ -85,7 +83,7 @@ router.post("/", async (req, res, next) => {
     entity.token = token;
     userModel
       .addRecoverToken(entity)
-      .then(r => res.redirect("forgotPassword/nortificationRequest"))
+      .then(() => res.redirect("forgotPassword/nortificationRequest"))
       .catch(e => next(e));
   } else {
     res.redirect("/forgotPassword");

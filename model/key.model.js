@@ -46,7 +46,6 @@ module.exports = {
   },
   createFreeKey: userId => {
     const entity = {};
-    const today = (entity.value = genKey());
     entity.id_package = 0;
     entity.user_id = userId;
     entity.date_start = new Date();
