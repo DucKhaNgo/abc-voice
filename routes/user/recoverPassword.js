@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var bcrypt = require("bcrypt");
 var userModel = require("../../model/user.model");
-router.get("/", async (req, res, next) => {
+router.get("/", async (req, res) => {
   var message = "Lỗi xác thực";
   let user = req.user;
   if (req.query.id === undefined) {
@@ -29,7 +29,7 @@ router.get("/", async (req, res, next) => {
     }
   }
 });
-router.post("/", async (req, res, next) => {
+router.post("/", async (req, res) => {
   console.log("abc", req.body);
   const user = req.user;
   const body = req.body;
@@ -40,7 +40,6 @@ router.post("/", async (req, res, next) => {
     });
     res.redirect("./login");
   } else {
-    
     userModel
       .findByEmail(user.email)
       .then(rows => {
@@ -48,10 +47,10 @@ router.post("/", async (req, res, next) => {
           return res.send("loi form");
         }
 
-        console.log("user--",body.old_password)
+        console.log("user--", body.old_password);
         // var user = rows[0];
         var ret = bcrypt.compareSync(body.old_password, rows[0].password);
-        console.log("ret",ret);
+        console.log("ret", ret);
         if (ret) {
           const password = bcrypt.hashSync(body.password, 10);
           userModel.changePassword(user.email, password).catch(e => {

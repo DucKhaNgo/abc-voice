@@ -1,7 +1,5 @@
 var express = require("express");
 var router = express.Router();
-var transcribe_middleware = require("../../middleware/transcribe");
-var request = require("request");
 
 var uploadSingleFile = require("./upload");
 // packages upload file

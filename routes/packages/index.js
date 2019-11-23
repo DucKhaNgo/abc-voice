@@ -9,7 +9,7 @@ const account = require("../../const/emailAccount");
 let message = false;
 /* GET home page. */
 
-router.get("/", async function(req, res, next) {
+router.get("/", async function(req, res) {
   console.log(req.user);
   const listKey = await toFunc(packageKeyModel.getAll());
   console.log("listKey", listKey[1][0]);
@@ -80,7 +80,7 @@ router.get("/buy/:id", async (req, res, next) => {
     }
   }
 });
-router.get("/verify", function(req, res, next) {
+router.get("/verify", function(req, res) {
   console.log(req.user);
   const user = req.user;
   if (!user) {
