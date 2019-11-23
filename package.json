@@ -6,6 +6,17 @@
     "start": "node ./bin/www",
     "dev": "nodemon  ./bin/www"
   },
+  "lint-staged": {
+    "routes/*.js": [
+      "eslint --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "git-branch-is -r \"^((?!master).)*$\""
+    }
+  },
   "dependencies": {
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
@@ -47,6 +58,9 @@
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
+    "eslint": "^6.6.0",
+    "husky": "^3.1.0",
+    "lint-staged": "^10.0.0-beta.3",
     "nodemon": "^1.18.9"
   }
 }

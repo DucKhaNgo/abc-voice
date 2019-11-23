@@ -1,22 +1,31 @@
+/* eslint-disable no-undef */
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var app = express();
-
-require("./middleware/session")(app);
-require("./middleware/passport")(app);
-require("dotenv").config();
+var express_handlebars_sections = require("express-handlebars-sections");
 var hbs = require("express-handlebars");
+
+require("dotenv").config();
+
 app.engine(
   "hbs",
   hbs({
+    section: express_handlebars_sections(),
     extname: "hbs",
     defaultLayout: "layout",
     layoutsDir: __dirname + "/views/",
     partialsDir: __dirname + "/views/partials/",
     helpers: {
+      section: function(name, options) {
+        if (!this._sections) {
+          this._sections = {};
+        }
+        this._sections[name] = options.fn(this);
+        return null;
+      },
       if_eq: (arg1, arg2) => {
         return arg1 === arg2;
       },
@@ -27,8 +36,10 @@ app.engine(
   })
 );
 
-// view engine setupsjdbsd
-app.set("views", path.join(__dirname, "views"));
+require("./middleware/session")(app);
+require("./middleware/passport")(app);
+// view engine setups
+app.set("views", path.join(__dirname, "views/"));
 app.set("view engine", "hbs");
 
 // setting
@@ -48,7 +59,7 @@ app.use(function(req, res, next) {
 });
 
 // error handlerhd
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};

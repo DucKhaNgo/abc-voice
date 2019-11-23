@@ -18,6 +18,12 @@ router.post("/", (req, res, next) => {
     }
     req.logIn(user, err => {
       if (err) return next(err);
+      const backUrl = req.session.backUrl;
+      if (backUrl) {
+        req.session.backUrl = null;
+        res.redirect(backUrl);
+        return;
+      }
       res.redirect("/");
     });
   })(req, res, next);

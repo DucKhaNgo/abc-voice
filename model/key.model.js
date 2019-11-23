@@ -17,10 +17,15 @@ module.exports = {
   getKeyById: id => {
     return db.load(`select * from api_key where user_id='${id}' and valid = 1`);
   },
-  countOderByUserId: (userId) => {
-    return db.load(`select count (*) from api_key where user_id='${userId}'`);
+  countOderByUserId: userId => {
+    return db.load(
+      `select count (*) as count from api_key where user_id='${userId}'`
+    );
   },
-  listInLimit:(userId,page,limitPerPage) => db.load(`select * from api_key where user_id='${userId}' limit ${page},${limitPerPage}`),
+  listInLimit: (userId, page, limitPerPage) =>
+    db.load(
+      `select * from api_key where user_id='${userId}' limit ${page},${limitPerPage}`
+    ),
   createEntity: (packages, userId, OTP) => {
     const entity = {};
     const today = new Date();
@@ -58,9 +63,13 @@ module.exports = {
     );
   },
   getAllKeyByYear: (year, month) => {
-    return db.load(`select SUM(price) as total from api_key where date_start like '${year}-${month}%' order by id ASC`)
+    return db.load(
+      `select SUM(price) as total from api_key where date_start like '${year}-${month}%' order by id ASC`
+    );
   },
   getAllKeyByYearPackage: (year, month) => {
-    return db.load(`select SUM(price) as total, name_package from api_key where date_start like '${year}-${month}%' GROUP BY name_package`)
+    return db.load(
+      `select SUM(price) as total, name_package from api_key where date_start like '${year}-${month}%' and name_package <> 'Free' GROUP BY name_package`
+    );
   }
 };

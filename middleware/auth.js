@@ -1,4 +1,15 @@
 module.exports = {
+  signedUp: (req, res, next) => {
+    if (req.user) next();
+    else next(new Error(403));
+  },
+  common: (req, res, next) => {
+    if (req.user && req.user.role === "admin")
+      res.redirect("/admin/accessmanage");
+    else {
+      next();
+    }
+  },
   admin: (req, res, next) => {
     if (req.user) {
       if (req.user.role === "admin") {
@@ -6,9 +17,11 @@ module.exports = {
       } else {
         next(new Error(403));
       }
-    } else res.redirect("/login");
+    } else {
+      req.session.backUrl = "/admin/accessmanage";
+      res.redirect("/login");
+    }
   },
-
   user: (req, res, next) => {
     if (req.user) {
       if (req.user.role === "user") {

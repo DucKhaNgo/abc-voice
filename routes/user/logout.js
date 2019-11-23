@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var auth = require("../../middleware/auth").user;
-router.get("/", auth, function(req, res, next) {
+router.get("/", function(req, res) {
   req.logOut();
   res.redirect("/");
 });

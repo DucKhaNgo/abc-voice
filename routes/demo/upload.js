@@ -52,9 +52,7 @@ module.exports = {
       descriptionFile = req.session.filename;
     }
     let message = req.session.message;
-    console.log(message);
     req.session.message = null;
-    req.session = null;
     res.render("./demo/demo", {
       title: "Phiên dịch",
       jsonData: jsonData,
