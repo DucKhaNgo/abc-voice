@@ -22,6 +22,10 @@ router.post("/", (req, res, next) => {
         res.redirect(backUrl);
         return;
       }
+      if (user.role === "admin") {
+        res.redirect("admin/accessmanage");
+        return;
+      }
       res.redirect("/");
     });
   })(req, res, next);
