@@ -32,7 +32,7 @@ jobs:
     machine:
       enabled: true
     environment:
-      - HEROKU_APP_NAME: abcvoice
+      - HEROKU_APP_NAME: abc-voice
     steps:
       - checkout
       - run:
