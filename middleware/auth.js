@@ -1,7 +1,8 @@
+const createError = require("http-errors");
 module.exports = {
   signedUp: (req, res, next) => {
     if (req.user) next();
-    else next(new Error(403));
+    else next(createError(403));
   },
   common: (req, res, next) => {
     if (req.user && req.user.role === "admin")
@@ -32,7 +33,7 @@ module.exports = {
     } else res.redirect("/login");
   },
   guest: (req, res, next) => {
-    console.log(req.user);
+    // console.log(req.user);
     if (!req.user) {
       next();
       return;

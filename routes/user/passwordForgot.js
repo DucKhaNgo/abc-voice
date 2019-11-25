@@ -4,14 +4,15 @@ var userModel = require("../../model/user.model");
 var bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const account = require("../../const/emailAccount");
-let message = false;
+const auth = require("../../middleware/auth");
 /* GET emailForgot page. */
 router.get("/", function(req, res) {
+  const message = req.session.message;
+  req.session.message = null;
   res.render("passwordforgot/passwordForgot", {
     title: "Email Forgot",
-    message: message
+    message
   });
-  message = false;
 });
 
 /* GET email requst notification page. */
@@ -23,12 +24,39 @@ router.get("/nortificationRequest", function(req, res) {
 });
 
 /* GET input new password page. */
-router.get("/newPassword", function(req, res) {
+router.get("/newPassword", auth.user, function(req, res) {
   res.render("passwordforgot/newPassword", {
     title: "New Password",
     layout: "../views/layout",
     email: req.user.email
   });
+});
+
+router.post("/", async (req, res, next) => {
+  const email = req.body.email;
+  let token = "";
+  let user = null;
+  try {
+    req.session.message =
+      "Có vẻ như tài khoản của bạn không tồn tại, hoặc chưa được kíck hoạt với bất cứ email nào :( !!!";
+    user = await userModel.findByEmail(email);
+    if (user.length > 0) {
+      token = await sendmailRecover(req, res, next, email);
+      const entity = user[0];
+      entity.token = token;
+      return userModel
+        .addRecoverToken(entity)
+        .then(() => {
+          req.session.message =
+            "Chúng tôi đã gửi thư đến email của bạn, hãy làm theo hướng dẫn trong thư để lấy lại mật khẩu nhé ^^!";
+          res.redirect("/forgotPassword/nortificationRequest");
+        })
+        .catch(e => next(e));
+    }
+    res.redirect("/forgotPassword");
+  } catch (e) {
+    next(e);
+  }
 });
 const smtpTransport = nodemailer.createTransport({
   host: "gmail.com",
@@ -38,9 +66,9 @@ const smtpTransport = nodemailer.createTransport({
     pass: account.GMAIL_PASSWORD
   }
 });
-const sendmailRecover = async (req, res, email) => {
-  const token = await bcrypt.hash(req.body.email, 0);
 
+const sendmailRecover = async (req, res, next, email) => {
+  const token = await bcrypt.hash(req.body.email, 0);
   const link = "http://" + req.get("host") + "/recoverPassword?id=" + token;
   const mailOptions = {
     to: email,
@@ -50,43 +78,10 @@ const sendmailRecover = async (req, res, email) => {
       link +
       ">Click để phục hồi</a>"
   };
-  console.log(mailOptions);
-  smtpTransport.sendMail(mailOptions, function(error, response) {
-    if (error) {
-      console.log(error);
-      res.end("error");
-    } else {
-      console.log("Message sent: " + response.message);
-      res.end("sent");
-    }
+  // eslint-disable-next-line no-unused-vars
+  smtpTransport.sendMail(mailOptions, function(error, info) {
+    if (error) next(error);
   });
   return token;
 };
-router.post("/", async (req, res, next) => {
-  const email = req.body.email;
-  let token = "";
-  message =
-    "Có vẻ như tài khoản của bạn không tồn tại, hoặc chưa được kíck hoạt với bất cứ email nào :( !!!";
-  let user = null;
-  try {
-    user = await userModel.findByEmail(email);
-  } catch (e) {
-    next(e);
-  }
-  console.log("user------", user);
-  console.log("email----", email);
-  if (user.length > 0) {
-    message =
-      "Chúng tôi đã gửi thư đến email của bạn, hãy làm theo hướng dẫn trong thư để lấy lại mật khẩu nhé ^^!";
-    token = await sendmailRecover(req, res, email);
-    const entity = user[0];
-    entity.token = token;
-    userModel
-      .addRecoverToken(entity)
-      .then(() => res.redirect("forgotPassword/nortificationRequest"))
-      .catch(e => next(e));
-  } else {
-    res.redirect("/forgotPassword");
-  }
-});
 module.exports = router;

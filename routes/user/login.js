@@ -3,29 +3,28 @@ var router = express.Router();
 var passport = require("passport");
 /* GET login page. */
 router.get("/", function(req, res) {
-  res.render("login/login", { title: "Login" });
+  const info = req.session.info || "";
+  req.session.info = null;
+  res.render("login/login", { title: "Login", info });
 });
 router.post("/", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
     if (!user) {
-      return res.render("login/login", {
-        title: "Login",
-        info
-      });
+      req.session.info = info;
+      return res.redirect("/login");
     }
     req.logIn(user, err => {
       if (err) return next(err);
-      const backUrl = req.session.backUrl;
-      if (backUrl) {
-        req.session.backUrl = null;
-        res.redirect(backUrl);
+      if (user.role === "admin") {
+        res.redirect("admin/accessmanage");
         return;
       }
       res.redirect("/");
     });
   })(req, res, next);
 });
+
 router.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
