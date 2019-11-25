@@ -43,7 +43,7 @@ router.get("/revenuemanage", async (req, res) => {
     }
     total.push({ id: i, totalSum: thang[0].total });
   }
-  const allPackage = await keyModel.getAll();
+  // const allPackage = await keyModel.getAll();
   const yearBymonth = req.query.yearByMonth || moment().year();
   const monthBymonth = req.query.monthByMonth || moment().month() + 1;
   let byMonth = await apiKeyModel.getAllKeyByYearPackage(
