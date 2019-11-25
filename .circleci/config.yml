@@ -1,0 +1,53 @@
+#
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:lts
+
+    working_directory: ~/abc-voice
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: npm run lint
+
+      - run: npm run test
+
+  deploy:
+    machine:
+      enabled: true
+    environment:
+      - HEROKU_APP_NAME: abcvoice-cicd
+    steps:
+      - checkout
+      - run:
+          name: Deploy Master to Heroku
+          command: |
+            git push https://heroku:eb0da33f-3cdf-4d9a-aaf6-a26ef6801fe6@git.heroku.com/$HEROKU_APP_NAME.git master
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master 
