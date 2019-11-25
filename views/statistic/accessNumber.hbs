@@ -12,7 +12,7 @@
             <div class="col-lg-12">
                 <div class="breadcrumb_iner text-center">
                     <div class="breadcrumb_iner_item">
-                        <h2 class="api-title">ADMIN MANAGEMENT</h2>
+                        <h2 class="api-title" style="font-size: 50px">ACCESS MANAGEMENT</h2>
                     </div>
                 </div>
             </div>
@@ -31,25 +31,25 @@
                     <div class="single-element-widget mt-30">
                         <div class="default-select" id="default-select_2" style="display:flex">
                             <form method="GET" action="/admin/accessmanage">
-                            <select class="yearOptions" name="year" id="ByYear"></select>
-                            <button type="submit" class="getAccessNumberBtn genric-btn success-border">GET</button>
+                                <select class="yearOptions" name="year" id="ByYear"></select>
+                                <button type="submit" class="getAccessNumberBtn genric-btn success-border">GET</button>
                             </form>
                         </div>
                     </div>
-                        {{#each dataAccess}}
-                        <span style="color: white;" id={{id}} name={{id}}>{{value}}</span>
-                        {{/each}}
+                    {{#each dataAccess}}
+                    <span style="color: white;" id={{id}} name={{id}}>{{value}}</span>
+                    {{/each}}
                     <canvas id="accessNumberChart"></canvas>
                     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-                    
+
                     <script>
                         //đổ data ở đây !
-                        let data = [0,0,0,0,0,0,0,0,0,0,0,0];
+                        let data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                         data = data.map((elem, index) => {
-                            return (parseInt($(`#${index+1}`).html()) || 0);
+                            return (parseInt($(`#${index + 1}`).html()) || 0);
                         });
                         console.log('data----', data);
-                        console.log('vaalll',$("#10").html());
+                        console.log('vaalll', $("#10").html());
                         var ctx = document.getElementById("accessNumberChart");
                         var accessNumberChart = new Chart(ctx, {
                             type: 'line',
@@ -80,7 +80,7 @@
 
                         });
                     </script>
-                  
+
                     {{!-- <script>$(`#ByYearAC option[value=${$("#ByYearValue").text()}]`).attr("selected", true);</script> --}}
                 </div>
 
@@ -91,18 +91,18 @@
 </section>
 
 {{#section 'footer'}}
-   <script src="/js/myCustom.js"></script>
+<script src="/js/myCustom.js"></script>
 {{/section}}
-  
+
 {{>footer}}
-<script >
+<script>
     let currentYear = new Date().getFullYear();
     let startYear = 2015;
     while (startYear <= currentYear) {
-    startYear++;
-    $(".yearOptions").append(
-        `<option value=${startYear} id='${startYear}year'>${startYear}</option>`
-    );
+        startYear++;
+        $(".yearOptions").append(
+            `<option value=${startYear} id='${startYear}year'>${startYear}</option>`
+        );
     }
     console.log("{{ByYearValue}}")
     $(`#ByYear option[value=${"{{ByYearValue}}"}]`).attr("selected", true);

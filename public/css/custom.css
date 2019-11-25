@@ -266,13 +266,21 @@ h2[class="userInfo"] {
   counter-increment: tableCount;
 }
 
-a:not([href]):not([tabindex]){
+a:not([href]):not([tabindex]) {
   color: white;
   background: gray;
   border: 1px solid gray;
 }
-.currentPage{
+.currentPage {
   color: #00b4ff;
   cursor: not-allowed;
   opacity: 0.8;
+}
+
+.btn_1 {
+  padding: 5px 10px;
+}
+.heading {
+  font-weight: bold;
+  color: white;
 }

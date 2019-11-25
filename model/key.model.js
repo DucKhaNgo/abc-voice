@@ -39,6 +39,7 @@ module.exports = {
     entity.date_expired = new Date(
       date_expired.setDate(today.getDate() + packages.term)
     );
+    entity.term = packages.term;
     entity.name_package = packages.name;
     entity.transactionId = OTP;
     console.log("entity---", entity);
@@ -46,15 +47,16 @@ module.exports = {
   },
   createFreeKey: userId => {
     const entity = {};
-    const today = (entity.value = genKey());
     entity.id_package = 0;
     entity.user_id = userId;
     entity.date_start = new Date();
     entity.valid = true;
+    entity.value = genKey();
     entity.price = 0;
     entity.date_expired = new Date();
     entity.name_package = "Free";
     entity.transactionId = null;
+    entity.term = 0;
     return entity;
   },
   getKeyByTransactionId: transactionId => {

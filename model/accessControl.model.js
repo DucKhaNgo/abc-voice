@@ -1,5 +1,4 @@
 let db = require("../util/db");
-var genKey = require("../function/genarateKey");
 
 module.exports = {
   add: entity => {
@@ -8,10 +7,12 @@ module.exports = {
   searchKey: id => {
     return db.load(`select * from api_key where value='${id}'`);
   },
-  singleByYearAndMonth: (year) => {
-    return db.load(`select * from accessControl where year='${year}' order by month ASC`);
+  singleByYearAndMonth: year => {
+    return db.load(
+      `select * from accessControl where year='${year}' order by month ASC`
+    );
   },
   update: entity => {
     return db.update("api_key", "id", entity);
-  },
+  }
 };

@@ -2,66 +2,58 @@ var express = require("express");
 var router = express.Router();
 var bcrypt = require("bcrypt");
 var userModel = require("../../model/user.model");
-router.get("/", async (req, res, next) => {
-  var message = "Lỗi xác thực";
+const createError = require("http-errors");
+router.get("/", async (req, res) => {
   let user = req.user;
+  const message = req.session.message;
+  req.session.message = null;
   if (req.query.id === undefined) {
+    if (!user) return res.redirect("/login");
     res.render("passwordforgot/newPassword", {
       title: "Khôi phục mật khẩu",
-      // message: message,
       user,
-      email: user.email
+      email: user.email,
+      message
     });
   } else {
     const user = await userModel.verifyRecoverToken(req.query.id);
     if (user.length > 0) {
-      console.log("enter recoverpassword zone");
-      // message = "";
       const email = user[0].email;
       res.render("passwordforgot/newPassword", {
         title: "Khôi phục mật khẩu",
-        // message: message,
         email
       });
     } else {
-      console.log("cannot enter recoverpassword zone");
-      res.send(message);
+      res.redirect("/forgotPassword");
     }
   }
 });
 router.post("/", async (req, res, next) => {
-  console.log("abc", req.body);
   const user = req.user;
   const body = req.body;
   if (req.body && req.body.email && req.body.password) {
+    console.log("body", body);
     const password = bcrypt.hashSync(req.body.password, 10);
     await userModel.changePassword(req.body.email, password).catch(e => {
-      console.log(e);
+      next(e);
     });
-    res.redirect("./login");
+    res.redirect("/login");
   } else {
-    
+    if (!user) return res.redirect("/login");
     userModel
       .findByEmail(user.email)
       .then(rows => {
         if (rows.length === 0) {
-          return res.send("loi form");
+          return next(createError(404));
         }
-
-        console.log("user--",body.old_password)
-        // var user = rows[0];
         var ret = bcrypt.compareSync(body.old_password, rows[0].password);
-        console.log("ret",ret);
         if (ret) {
           const password = bcrypt.hashSync(body.password, 10);
-          userModel.changePassword(user.email, password).catch(e => {
-            console.log(e);
-            return res.send(e);
-          });
-          return res.redirect("./login");
+          userModel.changePassword(user.email, password).catch(e => next(e));
+          return res.redirect("/login");
         }
-
-        return res.send("mat khau cu khong khop");
+        req.session.message = "Old password not vaild";
+        res.redirect("/recoverPassword");
       })
       .catch(err => {
         return res.send(err, false);

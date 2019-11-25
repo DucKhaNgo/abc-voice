@@ -3,11 +3,11 @@ var router = express.Router();
 var userModel = require("../../model/user.model");
 var keyModel = require("../../model/key.model");
 var bcrypt = require("bcrypt");
-router.get("/", function(req, res, next) {
+router.get("/", function(req, res) {
   res.render("register/register", { title: "register" });
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", async (req, res) => {
   if (req.body) {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -33,9 +33,7 @@ router.post("/", async (req, res, next) => {
       const useradd = await userModel.add(data);
       if (useradd.affectedRows === 1) {
         const freeKey = keyModel.createFreeKey(useradd.insertId);
-        console.log(freeKey);
         await keyModel.add(freeKey);
-        console.log("đăng ký thành công", useradd.insertId);
         return res.redirect("/login");
       } else {
         return res.render("register/register", {
