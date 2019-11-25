@@ -1,6 +1,8 @@
 const request = require("supertest");
 const { context } = require("mocha");
 const app = require("../app");
+const userModel = require("../model/user.model");
+const bcrypt = require("bcrypt");
 
 let cookie = "";
 describe("Test the login path", () => {
@@ -16,16 +18,29 @@ describe("Test the login path", () => {
   });
   describe("Post", () => {
     test("Should login user account successfull", done => {
+      const user = { email: "test@test", password: "123456" };
+      bcrypt.compareSync = jest.fn().mockReturnValue(true);
+      userModel.findByEmail = jest
+        .fn()
+        .mockReturnValue(new Promise((result, reject) => result([user])));
       request(app)
         .post("/login")
-        .send({ email: "test@test", password: "123456" })
+        .send(user)
         .then(response => {
           expect(response.statusCode).toBe(302);
           expect(response.header.location).toBe("/");
           done();
         });
     });
+
     test("Should login admin account successfully", done => {
+      const user = { email: "test@test", password: "123456" };
+      bcrypt.compareSync = jest.fn().mockReturnValue(true);
+      userModel.findByEmail = jest
+        .fn()
+        .mockReturnValue(
+          new Promise((result, reject) => result([{ ...user, role: "admin" }]))
+        );
       request(app)
         .post("/login")
         .send({ email: "admin@admin", password: "123456" })
@@ -36,9 +51,14 @@ describe("Test the login path", () => {
         });
     });
     test("Should login user account failed", done => {
+      const user = { email: "test@test", password: "123456" };
+      bcrypt.compareSync = jest.fn().mockReturnValue(true);
+      userModel.findByEmail = jest
+        .fn()
+        .mockReturnValue(new Promise((result, reject) => result([])));
       request(app)
         .post("/login")
-        .send({ email: "wrongaccount", password: "123456" })
+        .send(user)
         .then(response => {
           expect(response.statusCode).toBe(302);
           expect(response.header.location).toBe("/login");

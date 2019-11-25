@@ -25,6 +25,7 @@ router.get("/nortificationRequest", function(req, res) {
 
 /* GET input new password page. */
 router.get("/newPassword", auth.user, function(req, res) {
+  console.log(`req.user`, req.user);
   res.render("passwordforgot/newPassword", {
     title: "New Password",
     layout: "../views/layout",
@@ -84,4 +85,5 @@ const sendmailRecover = async (req, res, next, email) => {
   });
   return token;
 };
-module.exports = router;
+
+module.exports = { router, sendmailRecover, smtpTransport };
