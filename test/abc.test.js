@@ -17,7 +17,6 @@ describe("Test the root path", () => {
       .get("/admin/accessmanage")
       .set("Cookie", cookie)
       .then(response => {
-        console.log(response.header.location);
         expect(response.statusCode).toBe(200);
         done();
       });

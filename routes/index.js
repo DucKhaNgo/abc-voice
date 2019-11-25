@@ -10,7 +10,7 @@ const router = async app => {
   app.use("/forgotPassword", user.forgotPass);
   app.use("/logout", auth.signedUp, user.logout);
   app.use("/register", user.register);
-  app.use("/recoverPassword", auth.user, user.changePass);
+  app.use("/recoverPassword", user.changePass);
   app.use("/demo", auth.common, require("./demo"));
   app.use("/abcvoiceapi", auth.common, require("./api/abcvoiceAPI"));
   app.use("/apidoc", auth.common, require("./document"));

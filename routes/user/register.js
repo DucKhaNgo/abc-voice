@@ -33,9 +33,7 @@ router.post("/", async (req, res) => {
       const useradd = await userModel.add(data);
       if (useradd.affectedRows === 1) {
         const freeKey = keyModel.createFreeKey(useradd.insertId);
-        console.log(freeKey);
         await keyModel.add(freeKey);
-        console.log("đăng ký thành công", useradd.insertId);
         return res.redirect("/login");
       } else {
         return res.render("register/register", {
