@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon  ./bin/www",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx"
   },
   "husky": {
     "hooks": {
