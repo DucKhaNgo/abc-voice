@@ -1,6 +1,8 @@
 const request = require("supertest");
 const { context } = require("mocha");
 const app = require("../app");
+const bcrypt = require("bcrypt");
+const userModel = require("../model/user.model");
 
 describe("Test /logout", () => {
   describe("Get", () => {
@@ -12,10 +14,16 @@ describe("Test /logout", () => {
           done();
         });
     });
-    test("Should login user account successfull", async done => {
+
+    test("Should logout user account successfull", async done => {
+      const user = { email: "test@test", password: "123456" };
+      bcrypt.compareSync = jest.fn().mockReturnValue(true);
+      userModel.findByEmail = jest
+        .fn()
+        .mockReturnValue(new Promise((resovle, reject) => resovle([user])));
       await request(app)
         .post("/login")
-        .send({ email: "admin@admin", password: "123456" })
+        .send(user)
         .then(response => {
           cookie = response.header["set-cookie"][0];
         });

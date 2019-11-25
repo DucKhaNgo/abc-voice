@@ -4,6 +4,6 @@ module.exports = {
   profile: require("./userInfo"),
   login: require("./login"),
   changePass: require("./recoverPassword"),
-  forgotPass: require("./passwordForgot"),
+  forgotPass: require("./passwordForgot").router,
   register: require("./register")
 };

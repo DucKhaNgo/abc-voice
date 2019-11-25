@@ -16,7 +16,7 @@ module.exports = {
       if (req.user.role === "admin") {
         next();
       } else {
-        next(new Error(403));
+        next(createError(403));
       }
     } else {
       req.session.backUrl = "/admin/accessmanage";
@@ -28,7 +28,7 @@ module.exports = {
       if (req.user.role === "user") {
         next();
       } else {
-        next(new Error(403));
+        next(createError(403));
       }
     } else res.redirect("/login");
   },
