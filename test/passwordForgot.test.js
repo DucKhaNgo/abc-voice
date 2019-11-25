@@ -35,28 +35,28 @@ describe("Test /forgotPassword", () => {
         });
     });
   });
-  describe("Post", () => {
-    test("/forgotPassword success", async done => {
-      await request(app)
-        .post("/forgotPassword")
-        .send({ email: "test@test" })
-        .then(response => {
-          expect(response.statusCode).toBe(302);
-          expect(response.header.location).toBe(
-            "/forgotPassword/nortificationRequest"
-          );
-          done();
-        });
-    });
-    test("/forgotPassword failed", async done => {
-      await request(app)
-        .post("/forgotPassword")
-        .send({ email: "wrongEmail" })
-        .then(response => {
-          expect(response.statusCode).toBe(302);
-          expect(response.header.location).toBe("/forgotPassword");
-          done();
-        });
-    });
-  });
+  // describe("Post", () => {
+  //   test("/forgotPassword success", async done => {
+  //     await request(app)
+  //       .post("/forgotPassword")
+  //       .send({ email: "test@test" })
+  //       .then(response => {
+  //         expect(response.statusCode).toBe(302);
+  //         expect(response.header.location).toBe(
+  //           "/forgotPassword/nortificationRequest"
+  //         );
+  //         done();
+  //       });
+  //   });
+  //   test("/forgotPassword failed", async done => {
+  //     await request(app)
+  //       .post("/forgotPassword")
+  //       .send({ email: "wrongEmail" })
+  //       .then(response => {
+  //         expect(response.statusCode).toBe(302);
+  //         expect(response.header.location).toBe("/forgotPassword");
+  //         done();
+  //       });
+  //   });
+  // });
 });
