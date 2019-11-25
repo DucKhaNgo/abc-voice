@@ -10,8 +10,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "eslint . --ext .js,.jsx ",
-      "pre-push": "git-branch-is -r \"^((?!master).)*$\"  && npm run test"
+      "pre-commit": "eslint . --ext .js,.jsx && git-branch-is -r \"^((?!master).)*$\"",
+      "pre-push": "npm run test"
     }
   },
   "dependencies": {
