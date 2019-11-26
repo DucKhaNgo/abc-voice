@@ -7,6 +7,7 @@ const apiKeyModel = require("../../model/key.model");
 // ---------------------------------------------------------------
 router.get("/accessmanage", async (req, res) => {
   // console.log(req.user);
+  console.log(req.query);
   const year = req.query.year || moment().year();
   // console.log("year-----", year);
   const access = await accessControlModel.singleByYearAndMonth(year);
@@ -38,6 +39,7 @@ router.get("/revenuemanage", async (req, res) => {
   for (let i = 1; i <= 12; i++) {
     const monthFormat = ("0" + i).slice(-2);
     const thang = await apiKeyModel.getAllKeyByYear(year, monthFormat);
+    console.log(thang);
     if (thang[0].total === null) {
       thang[0].total = 0;
     }
@@ -50,6 +52,7 @@ router.get("/revenuemanage", async (req, res) => {
     yearBymonth,
     monthBymonth
   );
+
   byMonth = byMonth.map((elem, index) => {
     elem.id = index + 100;
     elem.idName = index + 1000;

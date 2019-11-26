@@ -31,8 +31,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res, next) => {
   const user = req.user;
   const body = req.body;
-  if (req.body && req.body.email && req.body.password) {
-    console.log("body", body);
+  if (body && body.email && body.password) {
     const password = bcrypt.hashSync(req.body.password, 10);
     await userModel.changePassword(req.body.email, password).catch(e => {
       next(e);
@@ -49,8 +48,9 @@ router.post("/", async (req, res, next) => {
         var ret = bcrypt.compareSync(body.old_password, rows[0].password);
         if (ret) {
           const password = bcrypt.hashSync(body.password, 10);
-          userModel.changePassword(user.email, password).catch(e => next(e));
-          return res.redirect("/login");
+          userModel.changePassword(user.email, password);
+          res.redirect("/login");
+          return;
         }
         req.session.message = "Old password not vaild";
         res.redirect("/recoverPassword");

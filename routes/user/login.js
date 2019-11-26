@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require("passport");
 /* GET login page. */
 router.get("/", function(req, res) {
+  console.log("login");
   const info = req.session.info || "";
   req.session.info = null;
   res.render("login/login", { title: "Login", info });

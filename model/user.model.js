@@ -1,5 +1,4 @@
 let db = require("../util/db");
-
 module.exports = {
   add: entity => {
     return db.add("user", entity);

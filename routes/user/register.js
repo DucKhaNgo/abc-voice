@@ -8,46 +8,39 @@ router.get("/", function(req, res) {
 });
 
 router.post("/", async (req, res) => {
-  if (req.body) {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.render("register/register", {
-        title: "Đăng ký",
-        message: "Missing parameters"
-      });
-    }
-    const email_user = await userModel.findByEmail(email);
-    if (email_user.length > 0) {
-      return res.render("register/register", {
-        title: "Đăng ký",
-        message: "Username existed"
-      });
-    } else {
-      const data = {
-        email,
-        password: bcrypt.hashSync(password, 10),
-        role: "user",
-        name: "NoName",
-        isActivated: true
-      };
-      const useradd = await userModel.add(data);
-      if (useradd.affectedRows === 1) {
-        const freeKey = keyModel.createFreeKey(useradd.insertId);
-        await keyModel.add(freeKey);
-        return res.redirect("/login");
-      } else {
-        return res.render("register/register", {
-          title: "Đăng ký",
-          message: "Register failed"
-        });
-      }
-    }
-  } else {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res.render("register/register", {
       title: "Đăng ký",
       message: "Missing parameters"
     });
   }
+  console.log(req.body);
+  const email_user = await userModel.findByEmail(email);
+  console.log(email_user);
+  if (email_user.length > 0) {
+    return res.render("register/register", {
+      title: "Đăng ký",
+      message: "Username existed"
+    });
+  }
+  const data = {
+    email,
+    password: bcrypt.hashSync(password, 10),
+    role: "user",
+    name: "NoName",
+    isActivated: true
+  };
+  const useradd = await userModel.add(data);
+  if (useradd.affectedRows === 1) {
+    const freeKey = keyModel.createFreeKey(useradd.insertId);
+    await keyModel.add(freeKey);
+    return res.redirect("/login");
+  }
+  return res.render("register/register", {
+    title: "Đăng ký",
+    message: "Register failed"
+  });
 });
 
 module.exports = router;

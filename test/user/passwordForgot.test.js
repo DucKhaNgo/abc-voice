@@ -1,12 +1,12 @@
 const request = require("supertest");
-const app = require("../app");
+const app = require("../../app");
 let cookie = "";
 const bcrypt = require("bcrypt");
-const userModel = require("../model/user.model");
+const userModel = require("../../model/user.model");
 let {
   sendmailRecover,
   smtpTransport
-} = require("../routes/user/passwordForgot");
+} = require("../../routes/user/passwordForgot");
 let user = null;
 beforeAll(async () => {
   sendmailRecover = jest.fn().mockReturnValue(Promise.resolve("token"));
