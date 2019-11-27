@@ -31,8 +31,6 @@ jobs:
   deploy:
     machine:
       enabled: true
-    environment:
-      - HEROKU_APP_NAME: abc-voice
     steps:
       - checkout
       - run:
