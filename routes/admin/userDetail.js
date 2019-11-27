@@ -57,11 +57,9 @@ router.get("/:id", async (req, res, next) => {
   });
 });
 router.post("/changekey", async (req, res) => {
-  console.log("idddddd", req.body.id);
   const key = await apiKeyModel.searchKey(req.body.id);
-  console.log("key-------", key);
+
   key[0].value = genKey();
-  console.log("keyafterrr-------", key);
   await apiKeyModel.update(key[0]);
   // eslint-disable-next-line require-atomic-updates
   req.session.message = "Changed user's key successfully !!!";
@@ -69,9 +67,7 @@ router.post("/changekey", async (req, res) => {
 });
 //-----------------------------------------------
 router.post("/renewkey", async (req, res) => {
-  console.log("reqbody--", req.body);
   let key = await apiKeyModel.singleById(req.body.idKey);
-  console.log("key------", key);
   key[0].date_expired = moment(key[0].date_expired)
     .add(key[0].term, "days")
     .format("YYYY-MM-DD");
@@ -82,12 +78,11 @@ router.post("/renewkey", async (req, res) => {
 });
 //-----------------------------------------------
 router.post("/validkey", async (req, res, next) => {
-  console.log("reqbody--", req.body);
+  
   let key = await toFunction(apiKeyModel.singleById(req.body.idKey));
   if (key[0]) {
     return next(key[0]);
   }
-  console.log("key", key[1][0]);
   key[1][0].valid = !key[1][0].valid;
   const result = await toFunction(apiKeyModel.update(key[1][0]));
   if (result[0]) {

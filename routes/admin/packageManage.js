@@ -70,12 +70,7 @@ router.post("/validpackage", async (req, res, next) => {
 });
 router.post("/addpackage", async (req, res, next) => {
   const {name,term,price,numReq} = req.body;
-  // const term = req.body.term;
-  // const price = req.body.price;
-  // const numReq = req.body.numReq;
   const pack = packageModel.createPackage(name, term, price,numReq);
-  console.log("packk", pack);
-
   const result = await toFunction(packageModel.add(pack));
   if (result[0]) {
     return next(result[0]);
@@ -92,7 +87,6 @@ router.post("/editpackage", async (req, res, next) => {
   if (pack[0]) {
     return next(pack[0]);
   }
-  console.log("pack", pack[1][0]);
   pack[1][0].name = name;
   pack[1][0].term = term;
   pack[1][0].price = price;
