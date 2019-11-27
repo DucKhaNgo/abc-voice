@@ -2,7 +2,7 @@ const request = require("supertest");
 const { context } = require("mocha");
 const app = require("../../app");
 const bcrypt = require("bcrypt");
-const userModel = require("../model/user.model");
+const userModel = require("../../model/user.model");
 
 describe("Test /logout", () => {
   describe("Get", () => {
