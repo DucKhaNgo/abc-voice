@@ -1,15 +1,4 @@
 var mysql = require("mysql");
-
-// var createConnection = () => {
-//     return mysql.createConnection({
-//         host: 'localhost',
-//         port: 3306,
-//         user: 'root',
-//         password: '',
-//         database: 'abc_voice'
-//     });
-// }
-
 var createConnection = () => {
   return mysql.createConnection({
     host: "remotemysql.com",
@@ -24,7 +13,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       var connection = createConnection();
       connection.connect();
-      connection.query(sql, (error, results, fields) => {
+      connection.query(sql, (error, results) => {
         if (error) {
           reject(error);
         } else {

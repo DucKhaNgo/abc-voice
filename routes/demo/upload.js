@@ -1,7 +1,7 @@
 var request = require("request");
 
 module.exports = {
-  post: async (req, res, next) => {
+  post: async (req, res) => {
     let wdRes = res;
     let wdReq = req;
     const url = "https://server-sound-api.herokuapp.com";
@@ -30,9 +30,9 @@ module.exports = {
         }
       }
     };
-    request.post({ url: url, formData: formData }, async (err, res, body) => {
+    request.post({ url: url, formData: formData }, async (err, _res, body) => {
       if (err) {
-        wdReq.session.error = error;
+        wdReq.session.error = err;
         wdRes.redirect("/demo");
         return;
       } else {
@@ -44,7 +44,7 @@ module.exports = {
       }
     });
   },
-  get: async (req, res, next) => {
+  get: async (req, res) => {
     let jsonData = "";
     let descriptionFile = "";
     if (req.session.filename) {

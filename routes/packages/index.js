@@ -6,20 +6,18 @@ var toFunc = require("../../util/toFunction");
 var bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const account = require("../../const/emailAccount");
-let message = false;
 /* GET home page. */
 
-router.get("/", async function(req, res, next) {
-  console.log(req.user);
+router.get("/", async function(req, res) {
   const listKey = await toFunc(packageKeyModel.getAll());
-  console.log("listKey", listKey[1][0]);
+  const message = req.session.message;
+  req.session.message = null;
   res.render("packages/packages", {
     title: "Express",
     user: req.user,
     listKey: listKey[0] === null ? listKey[1] : "error",
-    message: message
+    message
   });
-  message = false;
 });
 const smtpTransport = nodemailer.createTransport({
   host: "gmail.com",
@@ -54,7 +52,6 @@ const sendOTPToMail = (req, res, email, OTP) => {
 };
 router.get("/buy/:id", async (req, res, next) => {
   const user = req.user;
-
   const idPackage = req.params.id;
   if (!user) {
     res.redirect("/login");
@@ -74,56 +71,47 @@ router.get("/buy/:id", async (req, res, next) => {
       if (isErr) {
         next(isErr);
       } else {
-        message = `Code's sent to your email ${user.email} . Please check !`;
+        // eslint-disable-next-line require-atomic-updates
+        req.session.message = `Code's sent to your email ${user.email} . Please check !`;
         res.redirect("/packages");
       }
     }
   }
 });
-router.get("/verify", function(req, res, next) {
-  console.log(req.user);
+router.get("/verify", function(req, res) {
   const user = req.user;
   if (!user) {
     return res.redirect("/login");
   }
-
+  const message = req.session.message;
+  req.session.message = null;
   res.render("checkcode/checkcode", {
     title: "Verify OTP",
     user,
     message
   });
-  message = false;
 });
 router.post("/verify", async (req, res, next) => {
-  console.log(req.user);
   const user = req.user;
   if (!user) {
     return res.redirect("/login");
   }
+  let message = null;
   const code = req.body.code;
-  console.log("code---", code);
   const api_key = await toFunc(keyModel.getKeyByTransactionId(code));
   if (api_key[0]) {
-    next(api_key[0]);
-  } else {
-    if (api_key[1].length === 0) {
-      message = "OTP code is invalid please try again :( !";
-      console.log("messs---", message);
-    } else {
-      console.log("valid---", api_key[1][0]);
-      api_key[1][0].valid = true;
-
-      // const result = await toFunc(keyModel.update(api_key[1][0]));
-      // if (result[0]) {
-      //   next(result[0]);
-      // } else {
-      keyModel.update(api_key[1][0]);
-      console.log("valid---", api_key[1][0]);
-      message = "Your key is activated successfully !!!";
-      //res.redirect("/");
-      //}
-    }
-    res.redirect("/packages/verify");
+    return next(api_key[0]);
   }
+  if (api_key[1].length === 0) {
+    message = "OTP code is invalid please try again :( !";
+  } else {
+    api_key[1][0].valid = true;
+    api_key[1][0].transactionId = null;
+    keyModel.update(api_key[1][0]);
+    message = "Your key is activated successfully !!!";
+  }
+  // eslint-disable-next-line require-atomic-updates
+  req.session.message = message;
+  res.redirect("/packages/verify");
 });
 module.exports = router;

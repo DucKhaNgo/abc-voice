@@ -4,9 +4,6 @@ module.exports = {
   add: entity => {
     return db.add("key", entity);
   },
-  getAll: () => {
-    return db.load(`select * from KeyPackages`);
-  },
   singleById: id => {
     return db.load(`select * from KeyPackages where id='${id}'`);
   },
@@ -19,5 +16,5 @@ module.exports = {
   }),
   getAll: () => {
     return db.load(`select * from KeyPackages where id <> 0`);
-  },
+  }
 };

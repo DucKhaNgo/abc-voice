@@ -6,6 +6,7 @@ const limitOfPerPage = require("../../const").limitOfPerPage;
 router.get("/", async (req, res) => {
   let pageNumber = Number(req.query.page || 1);
   const getSizeOfTotal = await userModel.count();
+  console.log(`getSizeOfTotal`, getSizeOfTotal);
   const sizeOfTotal = getSizeOfTotal[0]["count (*)"];
   const totalOfPage = Math.ceil(sizeOfTotal / limitOfPerPage);
   const pages = [];
@@ -23,6 +24,7 @@ router.get("/", async (req, res) => {
   }
   let page = (pageNumber - 1) * limitOfPerPage;
   let userList = await userModel.listInLimit(page, limitOfPerPage);
+  console.log(`userList`, userList);
   userList = userList.map((value, index) => {
     value.index = page + index + 1;
     return value;

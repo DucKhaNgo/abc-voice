@@ -31,6 +31,18 @@ app.engine(
       },
       if_not_eq: (arg1, arg2, options) => {
         return arg1 !== arg2 ? options.fn(this) : options.inverse(this);
+      },
+      numberFormat: (value, options) => {
+        var dl = options.hash["decimalLength"] || 0;
+        var ts = options.hash["thousandsSep"] || ".";
+        var ds = options.hash["decimalSep"] || ".";
+        var val = parseFloat(value);
+        var re = "\\d(?=(\\d{3})+" + (dl > 0 ? "\\D" : "$") + ")";
+        var num = val.toFixed(Math.max(0, ~~dl));
+        return (ds ? num.replace(".", ds) : num).replace(
+          new RegExp(re, "g"),
+          "$&" + ts
+        );
       }
     }
   })
@@ -59,7 +71,8 @@ app.use(function(req, res, next) {
 });
 
 // error handlerhd
-app.use(function(err, req, res) {
+// eslint-disable-next-line no-unused-vars
+app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
