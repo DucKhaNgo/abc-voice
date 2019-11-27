@@ -40,7 +40,7 @@
                             <div class="table-row">
                                 {{!-- NOT đổ data ở đây --}}
                                 
-                                <div class="serial" style="justify-content: center">{{@index}}</div>
+                                <div class="serial" style="justify-content: center">{{this.index}}</div>
                                 <div class="visit" style="justify-content: center"><input form="updateform"
                                         type="hidden" name="id">{{this.id}}
                                 </div>
@@ -49,19 +49,20 @@
                                 </div>
                                 <div class="country" style="justify-content: center">{{this.email}}</div>
                                 <div class="visit">
-                                
-                                       <a style="width:100%" class="genric-btn primary-border circle" href="/admin/userdetail/id={{this.id}}/page=1">Detail</a>
-                                    
-                                </div>
-                                
+                                       <a style="width:100%" class="genric-btn primary-border circle" href="/admin/userdetail/{{this.id}}">Detail</a>
+                                </div>      
                             </div>
                               {{/each}}
                         </div>
-                        {{#each pages}}
-                        <a class="getRevenueByYearBtn genric-btn success-border" href="/admin/usermanage/page={{this.id}}">{{this.id}}</a>
-                        {{/each}}
+                        
                     </div>
+                     {{#each pages}}
+                   <a class="getRevenueByYearBtn genric-btn success-border  {{#if this.currentPage}}currentPage{{/if}} "  
+                   {{#if this.currentPage}}{{else}}href="?page={{this.id}}"{{/if}}
+                  >{{this.id}}</a> 
+                {{/each}}
                 </div>
+               
             </div>
         </div>
         <!-- <div class="row justify-content-center">

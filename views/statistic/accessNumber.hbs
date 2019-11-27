@@ -3,13 +3,16 @@
 {{>adminHeader user=this.user}}
 <!-- breadcrumb start-->
 
+<div hidden id="ByYearValue">{{ByYearValue}}</div>
+<div hidden id="ByMonthmonthValue">{{ByMonthmonthValue}}</div>
+<div hidden id="ByMonthyearValue">{{ByMonthyearValue}}</div>
 <section class="breadcrumb breadcrumb_bg">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb_iner text-center">
                     <div class="breadcrumb_iner_item">
-                        <h2 class="api-title">ADMIN MANAGEMENT</h2>
+                        <h2 class="api-title" style="font-size: 50px">ACCESS MANAGEMENT</h2>
                     </div>
                 </div>
             </div>
@@ -23,32 +26,30 @@
 <section class="use_sasu">
     <div class="container">
         <div class="row justify-content-center">
-
             <div class="col-lg-8">
-
                 <div class="chart" style="position: relative; height:200px;">
                     <div class="single-element-widget mt-30">
-
                         <div class="default-select" id="default-select_2" style="display:flex">
                             <form method="GET" action="/admin/accessmanage">
-                            <select class="yearOptions" name="year"></select>
-                            <button type="submit" class="getAccessNumberBtn genric-btn success-border">GET</button>
+                                <select class="yearOptions" name="year" id="ByYear"></select>
+                                <button type="submit" class="getAccessNumberBtn genric-btn success-border">GET</button>
                             </form>
                         </div>
                     </div>
-                        {{#each dataAccess}}
-                        <span style="color: white;" id={{id}} name={{id}}>{{value}}</span>
-                        {{/each}}
+                    {{#each dataAccess}}
+                    <span style="color: white;" id={{id}} name={{id}}>{{value}}</span>
+                    {{/each}}
                     <canvas id="accessNumberChart"></canvas>
                     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
                     <script>
                         //đổ data ở đây !
-                        let data = [0,0,0,0,0,0,0,0,0,0,0,0];
+                        let data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                         data = data.map((elem, index) => {
-                            return (parseInt($(`#${index+1}`).html()) || 0);
+                            return (parseInt($(`#${index + 1}`).html()) || 0);
                         });
                         console.log('data----', data);
-                        console.log('vaalll',$("#10").html());
+                        console.log('vaalll', $("#10").html());
                         var ctx = document.getElementById("accessNumberChart");
                         var accessNumberChart = new Chart(ctx, {
                             type: 'line',
@@ -79,43 +80,30 @@
 
                         });
                     </script>
+
+                    {{!-- <script>$(`#ByYearAC option[value=${$("#ByYearValue").text()}]`).attr("selected", true);</script> --}}
                 </div>
 
             </div>
         </div>
     </div>
-    <!-- <div class="row justify-content-center">
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="single_feature">
-                            <div class="single_feature_part">
-                                <img src="img/icon/feature_icon_1.png" alt="">
-                                <h4>A Volunteer</h4>
-                                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="single_feature">
-                            <div class="single_feature_part">
-                                <img src="img/icon/feature_icon_2.png" alt="">
-                                <h4>A Volunteer</h4>
-                                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="single_feature">
-                            <div class="single_feature_part">
-                                <img src="img/icon/feature_icon_3.png" alt="">
-                                <h4>A Volunteer</h4>
-                                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor</p>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
     </div>
-
 </section>
-<!--================Blog Area =================-->
+
+{{#section 'footer'}}
+<script src="/js/myCustom.js"></script>
+{{/section}}
 
 {{>footer}}
+<script>
+    let currentYear = new Date().getFullYear();
+    let startYear = 2015;
+    while (startYear <= currentYear) {
+        startYear++;
+        $(".yearOptions").append(
+            `<option value=${startYear} id='${startYear}year'>${startYear}</option>`
+        );
+    }
+    console.log("{{ByYearValue}}")
+    $(`#ByYear option[value=${"{{ByYearValue}}"}]`).attr("selected", true);
+</script>
