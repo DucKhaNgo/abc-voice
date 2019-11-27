@@ -1,6 +1,7 @@
 const request = require("supertest");
-const app = require("../../app");
-const userModel = require("../../model/user.model");
+const { context } = require("mocha");
+const app = require("../app");
+const userModel = require("../model/user.model");
 const bcrypt = require("bcrypt");
 
 let cookie = "";
