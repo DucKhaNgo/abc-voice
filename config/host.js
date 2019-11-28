@@ -1,3 +1,3 @@
 module.exports={
-    host: "http://abcvoicene.herokuapp.com/"
+    host: "https://abcvoicene.herokuapp.com/"
 }
