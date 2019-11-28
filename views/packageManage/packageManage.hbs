@@ -1,3 +1,28 @@
+<!--Modal: modalPush-->
+<div class="modal fade  {{#if message}}show{{/if}}" id="modalPush" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true" {{#if message}} style="display:block" {{/if}}>
+    <div class="modal-dialog modal-notify modal-info" role="document">
+        <!--Content-->
+        <div class="modal-content text-center">
+            <!--Header-->
+            <div class="modal-header d-flex justify-content-center">
+                <p class="heading">Message</p>
+            </div>
+            <!--Body-->
+            <div class="modal-body">
+                <i class="fas fa-bell fa-4x animated rotateIn mb-4"></i>
+                <p>{{message}}</p>
+            </div>
+            <!--Footer-->
+            <div class="modal-footer flex-center">
+                {{!-- <button type="button" class="btn btn_1"><a style="color:white">Yes</a></button> --}}
+                <button type="button" class="closeModalBtn btn btn_1" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modalPush-->
 {{>adminHeader user=this.user}}
 <!-- banner part start-->
 {{>adminHeader user=this.user}}
@@ -29,13 +54,13 @@
             <!--Body-->
             <div class="modal-body">
 
-                <form>
+                <form method="POST" action="packagemanage/addpackage" >
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
                         </div>
                         <input required type="text" class="form-control" aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm">
+                            aria-describedby="inputGroup-sizing-sm" name="name">
                     </div>
 
                     <div class="input-group input-group-sm mb-3">
@@ -43,7 +68,7 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Term</span>
                         </div>
                         <input required type="number" class="form-control" aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm">
+                            aria-describedby="inputGroup-sizing-sm" name="term">
                     </div>
 
                     <div class="input-group input-group-sm mb-3">
@@ -51,7 +76,15 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Price</span>
                         </div>
                         <input required type="number" class="form-control" aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm">
+                            aria-describedby="inputGroup-sizing-sm" name="price">
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">NumRequest</span>
+                        </div>
+                        <input required type="number" class="form-control" aria-label="Small"
+                            aria-describedby="inputGroup-sizing-sm" name="numReq">
                     </div>
 
                     <button type="submit" class="btn btn_1">Add</button>
@@ -68,7 +101,8 @@
 </div>
 <!--Modal: addModal-->
 <!--Modal: editModal-->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+{{#each listPackage}}
+<div class="modal fade" id="editModal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-notify modal-info" role="document">
         <!--Content-->
@@ -80,14 +114,15 @@
             <!--Body-->
             <div class="modal-body">
 
-                <form>
+                <form method="POST" action="packagemanage/editpackage">
+                    <input type="hidden" name="idPack" value={{id}}>
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Name </span>
                         </div>
 
-                        <input required type="text" class="form-control" aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm">
+                        <input required type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-md" 
+                            value="{{name}}" name="name">
                     </div>
 
                     <div class="input-group input-group-sm mb-3">
@@ -95,7 +130,7 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Term</span>
                         </div>
                         <input required type="number" class="form-control" aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm">
+                            aria-describedby="inputGroup-sizing-sm" value={{term}} name="term">
                     </div>
 
                     <div class="input-group input-group-sm mb-3">
@@ -103,7 +138,15 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Price</span>
                         </div>
                         <input required type="number" class="form-control" aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm">
+                            aria-describedby="inputGroup-sizing-sm" value={{price}} name="price">
+                    </div>
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">NumRequest</span>
+                        </div>
+                        <input required type="number" class="form-control" aria-label="Small"
+                            aria-describedby="inputGroup-sizing-sm" name="numReq" value={{limitNumberOfReq}}>
                     </div>
 
                     <button type="submit" class="btn btn_1">Edit</button>
@@ -118,6 +161,7 @@
         <!--/.Content-->
     </div>
 </div>
+{{/each}}
 <!--Modal: editModal-->
 <!--================Blog Area =================-->
 <!-- use sasu part end-->
@@ -139,32 +183,35 @@
                                 <div class="serial">#</div>
                                 <div class="percentage">Package Name</div>
                                 <div class="country">Price</div>
-                                <div class="country">Expire</div>
+                                <div class="country">Term(Days)</div>
                                 <div class="visit">Change</div>
-                                <div class="visit">Delete</div>
+                                <div class="visit">Valid</div>
                             </div>
-
+                            {{#each listPackage}}
                             <div class="table-row">
+                                
+                                <div class="serial" style="justify-content: center">{{this.index}}</div>
+                                <div class="percentage" style="justify-content: center"><input type="hidden" name="id" />{{name}}</div>
 
-                                <div class="counterCell serial" style="display: flex;justify-content: center;"></div>
-                                <div class="percentage"><input type="hidden" name="id" />tên package</div>
-                                <div class="country" style="justify-content: center">thời gian</div>
-                                <div class="country" style="justify-content: center">giá</div>
+                                <input form="validpackage{{id}}" type="hidden" name="idPackage" value={{id}}>
+
+                                <div class="country" style="justify-content: center">{{price}}</div>
+                                <div class="country" style="justify-content: center">{{term}}</div>
                                 <div class="visit" style="justify-content: center">
                                     <button class="genric-btn primary-border circle editPackageBtn" data-toggle="modal"
-                                        data-target="#editModal">Edit</button>
+                                        data-target="#editModal{{id}}">Edit</button>
                                 </div>
                                 <div class="visit">
-                                    <form method="POST" action="" style="width:100%">
+                                    <form id="validpackage{{id}}" method="POST" action="packagemanage/validpackage" style="width:100%">
                                         <button style="justify-content: center" class="genric-btn success-border circle"
-                                            type="submit">Delete</button>
+                                            type="submit">{{status}}</button>
                                     </form>
                                 </div>
 
 
 
                             </div>
-
+                            {{/each}}
                         </div>
                     </div>
                     {{#each pages}}
