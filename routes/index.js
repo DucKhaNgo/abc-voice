@@ -16,6 +16,7 @@ const router = async app => {
   app.use("/apidoc", auth.common, require("./document"));
   app.use("/packages", auth.common, require("./packages"));
   app.use("/admin", auth.admin, admin);
+  app.use("/sdk", auth.common, require("./sdk"));
 };
 
 module.exports = router;
