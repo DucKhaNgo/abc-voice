@@ -7,7 +7,6 @@ const apiKeyModel = require("../../model/key.model");
 // ---------------------------------------------------------------
 router.get("/accessmanage", async (req, res) => {
   // console.log(req.user);
-  console.log(req.query);
   const year = req.query.year || moment().year();
   // console.log("year-----", year);
   const access = await accessControlModel.singleByYearAndMonth(year);
